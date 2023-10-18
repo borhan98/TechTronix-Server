@@ -26,7 +26,24 @@ async function run() {
     await client.connect();
 
     const productCollection = client.db("productDB").collection("products");
-    const brandCollection = client.db("productDB").collection('brands');
+
+    // GET
+    app.get("/products", async (req, res) => {
+      const result = await productCollection.find().toArray();
+      res.send(result);
+    })
+    app.get("/products/:brandName", async (req, res) => {
+      const brand = req.params.brandName;
+      const query = {brandName: brand};
+      const result = await productCollection.find(query).toArray();
+      res.send(result)
+    })
+    app.get("/products/:brandName/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await productCollection.findOne(query);
+      res.send(result);
+    })
 
     // POST product
     app.post("/products", async (req, res) => {
@@ -34,22 +51,6 @@ async function run() {
         const result = await productCollection.insertOne(product);
         res.send(result);
     })
-
-
-
-    // GET brand
-    app.get("/brands", async (req, res) => {
-        const result = await brandCollection.find().toArray();
-        res.send(result);
-    })
-    // POST brand
-    app.post("/brands", async (req, res) => {
-        const brand = req.body;
-        const result = await brandCollection.insertOne(brand);
-        res.send(result);
-    })
-
-
 
 
     // Send a ping to confirm a successful connection

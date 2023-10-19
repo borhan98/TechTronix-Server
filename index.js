@@ -30,7 +30,7 @@ async function run() {
 
     
     /*--------------- Products related program ----------------*/
-    // GET
+    // GET products from products
     app.get("/products", async (req, res) => {
       const result = await productCollection.find().toArray();
       res.send(result);
@@ -48,7 +48,7 @@ async function run() {
       res.send(result);
     })
 
-    // POST product
+    // POST product to products
     app.post("/products", async (req, res) => {
         const product = req.body;
         const result = await productCollection.insertOne(product);
@@ -63,11 +63,18 @@ async function run() {
       res.send(result);
     })
 
-
-    // POST product ot the cart
+    // POST product to the cart
     app.post("/cart", async (req, res) => {
       const product = req.body;
       const result = await cartCollection.insertOne(product);
+      res.send(result);
+    })
+    
+    // DELETE product from the cart
+    app.delete("/cart/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await cartCollection.deleteOne(query);
       res.send(result);
     })
 

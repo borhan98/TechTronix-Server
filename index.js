@@ -110,8 +110,6 @@ async function run() {
 }
 run().catch(console.dir);
 
-
-
 app.get("/", (req, res) => {
     res.send("TechTronix server is running...");
 })
